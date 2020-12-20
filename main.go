@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/zhaogaolong/latency/pkg/network"
 )
 
 const (
@@ -33,6 +34,11 @@ func Latency(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 	// to do set tc rule
+	err = network.SetLatency(latencyTime, "eth0")
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
 
 	fmt.Fprintf(w, "set latency %s success\n", latencyTime)
 }
